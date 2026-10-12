@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+
+<title>DULX V13 • Mobile Trading App</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050505">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DULX">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#050505;
+  color:#fff;
+  min-height:100vh;
+  padding-bottom:35px;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(5,5,5,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid #202020;
+  padding:15px;
+}
+
+.headerRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.version{
+  font-size:11px;
+  color:#aaa;
+  margin-top:2px;
+}
+
+.liveDot{
+  display:inline-block;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#20e060;
+  margin-right:5px;
+  box-shadow:0 0 10px #20e060;
+}
+
+.installBtn{
+  border:1px solid #333;
+  background:#151515;
+  color:#fff;
+  padding:10px 13px;
+  border-radius:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:12px;
+}
+
+.card{
+  background:#0d0d0d;
+  border:1px solid #222;
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:13px;
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+
+.card h2{
+  font-size:17px;
+  margin-bottom:13px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+
+.box{
+  background:#151515;
+  border:1px solid #292929;
+  border-radius:13px;
+  padding:11px;
+}
+
+.label{
+  color:#888;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+.value{
+  font-size:16px;
+  font-weight:bold;
+}
+
+.price{
+  font-size:28px;
+  font-weight:900;
+}
+
+select,input{
+  width:100%;
+  background:#151515;
+  color:#fff;
+  border:1px solid #333;
+  padding:11px;
+  border-radius:11px;
+  outline:none;
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:11px 13px;
+  background:#1b1b1b;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.primary{
+  background:#fff;
+  color:#000;
+}
+
+.green{
+  color:#35e878;
+}
+
+.red{
+  color:#ff5252;
+}
+
+.yellow{
+  color:#ffd54a;
+}
+
+.blue{
+  color:#52a8ff;
+}
+
+.signal{
+  font-size:25px;
+  font-weight:900;
+  text-align:center;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:10px;
+  background:#171717;
+}
+
+.long{
+  color:#35e878;
+  border:1px solid #1f8d4d;
+}
+
+.short{
+  color:#ff5252;
+  border:1px solid #a82c2c;
+}
+
+.wait{
+  color:#ffd54a;
+  border:1px solid #927c21;
+}
+
+.chart{
+  height:360px;
+  width:100%;
+}
+
+.setupGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.setup{
+  background:#151515;
+  padding:12px;
+  border-radius:12px;
+}
+
+.setup strong{
+  display:block;
+  margin-top:5px;
+  font-size:16px;
+}
+
+.progress{
+  height:9px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:9px;
+}
+
+.progressBar{
+  height:100%;
+  width:0%;
+  background:#fff;
+  transition:.3s;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.full{
+  width:100%;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+
+th,td{
+  padding:10px 8px;
+  border-bottom:1px solid #222;
+  text-align:left;
+  font-size:12px;
+}
+
+th{
+  color:#888;
+}
+
+.tableWrap{
+  overflow-x:auto;
+}
+
+.badge{
+  padding:5px 8px;
+  border-radius:8px;
+  font-weight:bold;
+  display:inline-block;
+}
+
+.badgeLong{
+  background:#10351e;
+  color:#35e878;
+}
+
+.badgeShort{
+  background:#3b1515;
+  color:#ff5252;
+}
+
+.badgeWait{
+  background:#382f0e;
+  color:#ffd54a;
+}
+
+.toast{
+  position:fixed;
+  left:15px;
+  right:15px;
+  bottom:20px;
+  z-index:9999;
+  background:#181818;
+  border:1px solid #333;
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 10px 35px #000;
+  display:none;
+}
+
+.toast.show{
+  display:block;
+}
+
+.alertItem{
+  border-left:4px solid #fff;
+  background:#151515;
+  padding:11px;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+
+.alertItem.tp{
+  border-left-color:#35e878;
+}
+
+.alertItem.sl{
+  border-left-color:#ff5252;
+}
+
+.alertItem.info{
+  border-left-color:#52a8ff;
+}
+
+.small{
+  font-size:11px;
+  color:#888;
+}
+
+.center{
+  text-align:center;
+}
+
+.footer{
+  text-align:center;
+  color:#666;
+  font-size:11px;
+  padding:20px;
+}
+
+@media(max-width:600px){
+  .grid3{
+    grid-template-columns:1fr;
+  }
+
+  .chart{
+    height:300px;
+  }
+
+  .price{
+    font-size:24px;
+  }
+
+  .logo{
+    font-size:24px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="headerRow">
+
+    <div>
+      <div class="logo">DULX</div>
+      <div class="version">
+        V13 • INSTALLABLE MOBILE APP
+        <span class="liveDot"></span>LIVE
+      </div>
+    </div>
+
+    <button class="installBtn" id="installBtn" onclick="installApp()">
+      📱 INSTALL
+    </button>
+
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- MARKET -->
+  <section class="card">
+
+    <h2>📊 Market Terminal</h2>
+
+    <div class="grid">
+
+      <div>
+        <div class="label">COIN</div>
+        <select id="coin">
+          <option value="BTCUSDT">BTC / USDT</option>
+          <option value="ETHUSDT">ETH / USDT</option>
+          <option value="BNBUSDT">BNB / USDT</option>
+          <option value="SOLUSDT">SOL / USDT</option>
+          <option value="HEMIUSDT">HEMI / USDT</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="label">TIMEFRAME</div>
+        <select id="timeframe">
+          <option value="1m">1 Minute</option>
+          <option value="5m">5 Minutes</option>
+          <option value="15m" selected>15 Minutes</option>
+          <option value="1h">1 Hour</option>
+          <option value="4h">4 Hours</option>
+        </select>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">LIVE PRICE</div>
+        <div id="price" class="price">Loading...</div>
+      </div>
+
+      <div class="box">
+        <div class="label">24H CHANGE</div>
+        <div id="change" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">STATUS</div>
+        <div id="marketStatus" class="value yellow">Connecting...</div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="actions">
+      <button class="primary" onclick="refreshMarket()">🔄 REFRESH & SCAN</button>
+      <button onclick="toggleAutoScan()" id="autoBtn">▶ AUTO SCAN</button>
+    </div>
+
+  </section>
+
+  <!-- SIGNAL -->
+  <section class="card">
+
+    <h2>🧠 DULX Smart Scanner</h2>
+
+    <div id="signal" class="signal wait">
+      WAIT
+    </div>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">CONFIDENCE</div>
+        <div id="confidence" class="value">--%</div>
+      </div>
+
+      <div class="box">
+        <div class="label">RSI</div>
+        <div id="rsi" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">TREND</div>
+        <div id="trend" class="value">--</div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="box">
+      <div class="label">ANALYSIS</div>
+      <div id="reason">Waiting for market data...</div>
+
+      <div class="progress">
+        <div id="confidenceBar" class="progressBar"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SETUP -->
+  <section class="card">
+
+    <h2>🎯 Trading Setup</h2>
+
+    <div class="setupGrid">
+
+      <div class="setup">
+        <div class="label">ENTRY</div>
+        <strong id="entry">--</strong>
+      </div>
+
+      <div class="setup">
+        <div class="label">STOP LOSS</div>
+        <strong id="sl">--</strong>
+      </div>
+
+      <div class="setup">
+        <div class="label">TP1</div>
+        <strong id="tp1">--</strong>
+      </div>
+
+      <div class="setup">
+        <div class="label">TP2</div>
+        <strong id="tp2">--</strong>
+      </div>
+
+      <div class="setup">
+        <div class="label">TP3</div>
+        <strong id="tp3">--</strong>
+      </div>
+
+      <div class="setup">
+        <div class="label">R:R</div>
+        <strong id="rr">--</strong>
+      </div>
+
+    </div>
+
+    <br>
+
+    <button class="primary full" onclick="useSetup()">
+      ⚡ USE DULX SETUP
+    </button>
+
+  </section>
+
+  <!-- PAPER TRADING -->
+  <section class="card">
+
+    <h2>💰 Paper Trading</h2>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">BALANCE</div>
+        <div id="balance" class="value">$100.00</div>
+      </div>
+
+      <div class="box">
+        <div class="label">TOTAL P/L</div>
+        <div id="totalPnL" class="value">$0.00</div>
+      </div>
+
+      <div class="box">
+        <div class="label">TRADES</div>
+        <div id="tradeCount" class="value">0</div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="grid">
+
+      <div>
+        <div class="label">RISK %</div>
+        <input id="risk" type="number" value="1" min="0.1" max="10" step="0.1">
+      </div>
+
+      <div>
+        <div class="label">POSITION SIZE</div>
+        <div class="box">
+          <div id="positionSize">$0.00</div>
+        </div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="actions">
+
+      <button class="primary" onclick="openPaperTrade()">
+        🟢 OPEN PAPER TRADE
+      </button>
+
+      <button onclick="closePaperTrade()">
+        🔴 CLOSE TRADE
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ACTIVE POSITION -->
+  <section class="card">
+
+    <h2>📡 Live Position Monitoring</h2>
+
+    <div id="positionStatus" class="center">
+      No active paper trade.
+    </div>
+
+    <br>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">SIDE</div>
+        <div id="positionSide" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">ENTRY</div>
+        <div id="positionEntry" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">LIVE P/L</div>
+        <div id="positionPnL" class="value">$0.00</div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">TP1</div>
+        <div id="monitorTP1" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">TP2</div>
+        <div id="monitorTP2" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">TP3</div>
+        <div id="monitorTP3" class="value">--</div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="actions">
+
+      <button onclick="moveToBE()">
+        🛡️ MOVE SL → BE
+      </button>
+
+      <button onclick="closePaperTrade()">
+        ❌ CLOSE POSITION
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ALERT SETTINGS -->
+  <section class="card">
+
+    <h2>🔔 Alert Settings</h2>
+
+    <div class="grid">
+
+      <div>
+        <div class="label">CONFIDENCE THRESHOLD</div>
+        <input id="threshold" type="number" min="50" max="100" value="70">
+      </div>
+
+      <div>
+        <div class="label">ALERT COOLDOWN (SECONDS)</div>
+        <input id="cooldown" type="number" min="10" value="60">
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="actions">
+
+      <button onclick="requestNotifications()">
+        🔔 ENABLE NOTIFICATIONS
+      </button>
+
+      <button onclick="testAlert()">
+        🔊 TEST ALERT
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- MULTI COIN -->
+  <section class="card">
+
+    <h2>🌐 Multi-Coin Scanner</h2>
+
+    <button class="primary full" onclick="scanAllCoins()">
+      🔍 SCAN BTC • ETH • BNB • SOL • HEMI
+    </button>
+
+    <br><br>
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>COIN</th>
+            <th>SIGNAL</th>
+            <th>CONF.</th>
+            <th>PRICE</th>
+            <th>RSI</th>
+            <th>TREND</th>
+          </tr>
+        </thead>
+
+        <tbody id="scanTable">
+          <tr>
+            <td colspan="6" class="center">
+              Press scan to analyze markets.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+  <!-- ALERT HISTORY -->
+  <section class="card">
+
+    <h2>📝 Alert History</h2>
+
+    <button onclick="clearAlerts()">
+      🗑 CLEAR ALERTS
+    </button>
+
+    <br><br>
+
+    <div id="alertHistory">
+      <div class="small">
+        No alerts yet.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- STATISTICS -->
+  <section class="card">
+
+    <h2>📈 Trading Statistics</h2>
+
+    <div class="grid3">
+
+      <div class="box">
+        <div class="label">WIN RATE</div>
+        <div id="winRate" class="value">0%</div>
+      </div>
+
+      <div class="box">
+        <div class="label">WINS</div>
+        <div id="wins" class="value green">0</div>
+      </div>
+
+      <div class="box">
+        <div class="label">LOSSES</div>
+        <div id="losses" class="value red">0</div>
+      </div>
+
+      <div class="box">
+        <div class="label">BEST TRADE</div>
+        <div id="bestTrade" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">WORST TRADE</div>
+        <div id="worstTrade" class="value">--</div>
+      </div>
+
+      <div class="box">
+        <div class="label">PROFIT FACTOR</div>
+        <div id="profitFactor" class="value">--</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- HISTORY -->
+  <section class="card">
+
+    <h2>📜 Paper Trade History</h2>
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>TIME</th>
+            <th>COIN</th>
+            <th>SIDE</th>
+            <th>ENTRY</th>
+            <th>EXIT</th>
+            <th>P/L</th>
+          </tr>
+        </thead>
+
+        <tbody id="historyTable">
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+  <div class="footer">
+    DULX V13 • Installable Mobile Trading Dashboard<br>
+    Paper trading only. Market data and alerts can lag or fail.
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script>
+
+/* =========================================================
+   DULX V13
+   INSTALLABLE MOBILE APP
+========================================================= */
+
+const API="https://data-api.binance.vision/api/v3";
+const WS="wss://data-stream.binance.vision/ws/";
+
+const coins=[
+  "BTCUSDT",
+  "ETHUSDT",
+  "BNBUSDT",
+  "SOLUSDT",
+  "HEMIUSDT"
+];
+
+let currentPrice=0;
+let candles=[];
+let setup=null;
+let scanner=null;
+let socket=null;
+let autoScan=false;
+let autoTimer=null;
+let chart=null;
+let candleSeries=null;
+let deferredPrompt=null;
+let activeTrade=null;
+
+let balance=parseFloat(localStorage.getItem("dulxV11Balance")) || 100;
+let totalPnL=parseFloat(localStorage.getItem("dulxV11PnL")) || 0;
+let trades=parseInt(localStorage.getItem("dulxV11Trades")) || 0;
+let wins=parseInt(localStorage.getItem("dulxV11Wins")) || 0;
+let history=JSON.parse(localStorage.getItem("dulxV11History") || "[]");
+
+let alerts=JSON.parse(
+  localStorage.getItem("dulxV13Alerts") || "[]"
+);
+
+let lastAlertTime={};
+
+const $=id=>document.getElementById(id);
+
+function money(n){
+  if(!isFinite(n)) return "--";
+  return "$"+Number(n).toLocaleString(undefined,{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function num(n){
+  if(!isFinite(n)) return "--";
+  return Number(n).toLocaleString(undefined,{
+    maximumFractionDigits:8
+  });
+}
+
+function toast(message){
+  const t=$("toast");
+  t.innerHTML=message;
+  t.classList.add("show");
+
+  setTimeout(()=>{
+    t.classList.remove("show");
+  },3500);
+}
+
+/* =========================================================
+   PWA INSTALL
+========================================================= */
+
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  $("installBtn").style.display="block";
+});
+
+async function installApp(){
+
+  if(!deferredPrompt){
+
+    toast(
+      "📱 Install option is not currently available. " +
+      "Open DULX from a supported HTTPS website."
+    );
+
+    return;
+  }
+
+  deferredPrompt.prompt();
+
+  const result=await deferredPrompt.userChoice;
+
+  if(result.outcome==="accepted"){
+    toast("🚀 DULX installation started!");
+  }
+
+  deferredPrompt=null;
+}
+
+window.addEventListener("appinstalled",()=>{
+  toast("🔥 DULX V13 installed successfully!");
+  $("installBtn").style.display="none";
+});
+
+/* Service Worker */
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js")
+      .then(()=>{
+        console.log("DULX service worker registered");
+      })
+      .catch(err=>{
+        console.log("PWA service worker unavailable:",err);
+      });
+  });
+}
+
+/* =========================================================
+   INDICATORS
+========================================================= */
+
+function calculateEMA(data,period){
+
+  if(data.length<period) return [];
+
+  let result=[];
+  let multiplier=2/(period+1);
+
+  let sum=0;
+
+  for(let i=0;i<period;i++){
+    sum+=data[i];
+  }
+
+  let prev=sum/period;
+
+  result.push(prev);
+
+  for(let i=period;i<data.length;i++){
+
+    prev=(data[i]-prev)*multiplier+prev;
+
+    result.push(prev);
+  }
+
+  return result;
+}
+
+function calculateRSI(closes,period=14){
+
+  if(closes.length<=period) return 50;
+
+  let gains=0;
+  let losses=0;
+
+  for(let i=1;i<=period;i++){
+
+    const change=closes[i]-closes[i-1];
+
+    if(change>=0) gains+=change;
+    else losses+=Math.abs(change);
+  }
+
+  let avgGain=gains/period;
+  let avgLoss=losses/period;
+
+  for(let i=period+1;i<closes.length;i++){
+
+    const change=closes[i]-closes[i-1];
+
+    const gain=Math.max(change,0);
+    const loss=Math.max(-change,0);
+
+    avgGain=((avgGain*(period-1))+gain)/period;
+    avgLoss=((avgLoss*(period-1))+loss)/period;
+  }
+
+  if(avgLoss===0) return 100;
+
+  const rs=avgGain/avgLoss;
+
+  return 100-(100/(1+rs));
+}
+
+function calculateATR(data,period=14){
+
+  if(data.length<period+1) return 0;
+
+  let trs=[];
+
+  for(let i=1;i<data.length;i++){
+
+    const high=data[i].high;
+    const low=data[i].low;
+    const prevClose=data[i-1].close;
+
+    const tr=Math.max(
+      high-low,
+      Math.abs(high-prevClose),
+      Math.abs(low-prevClose)
+    );
+
+    trs.push(tr);
+  }
+
+  const recent=trs.slice(-period);
+
+  return recent.reduce((a,b)=>a+b,0)/recent.length;
+}
+
+/* =========================================================
+   BINANCE DATA
+========================================================= */
+
+async function getCandles(symbol,interval,limit=250){
+
+  const url=
+    API+
+    "/klines?symbol="+symbol+
+    "&interval="+interval+
+    "&limit="+limit;
+
+  const res=await fetch(url);
+
+  if(!res.ok){
+    throw new Error("Market unavailable");
+  }
+
+  const data=await res.json();
+
+  return data.map(x=>({
+    time:Math.floor(x[0]/1000),
+    open:parseFloat(x[1]),
+    high:parseFloat(x[2]),
+    low:parseFloat(x[3]),
+    close:parseFloat(x[4]),
+    volume:parseFloat(x[5])
+  }));
+}
+
+async function get24h(symbol){
+
+  const res=await fetch(
+    API+"/ticker/24hr?symbol="+symbol
+  );
+
+  if(!res.ok) throw new Error("Ticker unavailable");
+
+  return await res.json();
+}
+
+/* =========================================================
+   CHART
+========================================================= */
+
+function createChart(){
+
+  if(chart){
+    chart.remove();
+  }
+
+  chart=LightweightCharts.createChart(
+    document.createElement("div"),
+    {
+      width:1,
+      height:1
+    }
+  );
+}
+
+/* =========================================================
+   MARKET ANALYSIS
+========================================================= */
+
+function analyzeMarket(data){
+
+  const closes=data.map(x=>x.close);
+
+  const ema9Arr=calculateEMA(closes,9);
+  const ema21Arr=calculateEMA(closes,21);
+
+  const ema9=ema9Arr[ema9Arr.length-1];
+  const ema21=ema21Arr[ema21Arr.length-1];
+
+  const
